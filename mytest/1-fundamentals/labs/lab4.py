@@ -18,6 +18,12 @@ if __name__ == '__main__':
         for i in range(N):
             strtext = str(input("Student " + str(i) + ": "))
             student = strtext.split(' ')
+            if (student[1] <=0 or student[1] > 100) or \
+                (student[2] <=0 or student[2] > 100) or \
+                (student[2] <=0 or student[2] > 100):
+                print('Invalid mark')
+                break
+
             students.append(student)
         query_name = str(input("Query name:"))
         print(find_student_average_mark(students, query_name))
