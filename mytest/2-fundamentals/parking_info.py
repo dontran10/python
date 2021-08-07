@@ -2,9 +2,12 @@ import datetime
 import re
 import string
 import json
+import os
 
 class ParkingInfo:
-    dt_format = '%Y-%m-%d %H:%M'
+    DATETIME_FORMAT = '%Y-%m-%d %H:%M'
+    PARKING_DATA_FOLDER = "./parking-data/parking/" 
+    
     ##
     car_identity = ""
     arrival_time = ""
@@ -14,12 +17,12 @@ class ParkingInfo:
         pass
   
     def getCurrentTime():
-        return datetime.datetime.now().strftime(ParkingInfo.dt_format)
+        return datetime.datetime.now().strftime(ParkingInfo.DATETIME_FORMAT)
 
     def isValidParkTime( strtime):
         isValid = True
         try:
-            datetime.datetime.strptime(strtime, ParkingInfo.dt_format)
+            datetime.datetime.strptime(strtime, ParkingInfo.DATETIME_FORMAT)
         except Exception:
             isValid = False
         return 
@@ -64,20 +67,75 @@ class ParkingInfo:
                 print('Invalid frequencey number, re-enter gain')
     
     def saveParkingInfo(self):
-        appendData = {}
-        appendData['parking-info'] = []
-        appendData['parking-info'].append({
-            'car-identity': self.car_identity,
-            'datetime': self.arrival_time,
-            'frequency-number': self.frequency_number,
-            'operation': 'PARK'
-        })
+        fullname = ParkingInfo.PARKING_DATA_FOLDER + self.car_identity + ".json"
 
-        data = None
-        fullname = ".\\parking-data\\parking\\" + self.car_identity + ".json"
-        with open(fullname , "a+") as file:
-            data = json.load(file)
-            data.append(appendData)
+        # First time parking for this car, init data-json file for this car
+        jsonInit = {"available-credit" : 0, "parking-infos" : []}
+        if not os.path.isfile(fullname):
+            with open(fullname,"w") as file:
+                json.dump(jsonInit, file)
         
-        #with open(fullname, "w") as file:
-            json.dump(data, file)
+        # Parking infor for this packing
+        parkInfo = {
+            "parking-time": self.arrival_time,
+            "frequency-number": self.frequency_number,
+            "pickup-time" : "",
+            "payment-amount" : 0
+        }
+    
+        parkInfos = None
+        # Append this parking to the file for this car
+        with open(fullname , "r") as file:
+            parkInfos = json.load(file)
+            parkInfos["parking-infos"].append(parkInfo)
+
+        # Save file
+        with open(fullname, "w") as file:
+            json.dump(parkInfos, file)
+
+    def findPackingInfo(carIdentity):
+        carIdentity = string.strip(carIdentity)
+        if not ParkingInfo.isValidCarIdentity(carIdentity):
+            raise NameError('Invalid Car Identity')
+        else:
+            found = False
+            fullname = ParkingInfo.PARKING_DATA_FOLDER + carIdentity + ".json"
+            if not os.path.isfile(fullname):
+                raise NameError("This car ever parked yet")
+            else:
+                with open(fullname , "r") as file:
+                    parkInfos = json.load(file)
+                    packing = list(filter(lambda x: (x["pickup-time"] == ""), parkInfos["parking-infos"]))
+                    if len(packing) != 1:
+                        raise NameError("This car already picked up")
+                    else:
+                        return parkInfos
+
+
+    def inputPickUpCar() :        
+        car_identity = str(input('Car Identity (ex: 01A-12345):'))
+        car_identity = string.strip(car_identity)
+
+        if not ParkingInfo.isValidCarIdentity(car_identity):
+            raise NameError('Invalid Car Identity')
+        
+        fullname = ParkingInfo.PARKING_DATA_FOLDER + car_identity + ".json"
+        if not os.path.isfile(fullname):
+            raise NameError("This car ever parked yet")
+        
+        activeParkingInfo = None
+        parkInfos = None
+        with open(fullname , "r") as file:
+            parkInfos = json.load(file)
+            activeParkingInfo = list(filter(lambda x: (x["pickup-time"] == ""), parkInfos["parking-infos"]))
+            if len(activeParkingInfo) != 1:
+                raise NameError("This car already picked up")
+        
+        
+
+      
+
+        
+        
+       
+# guru99.com/reading-and-writing-files-in-python.html
