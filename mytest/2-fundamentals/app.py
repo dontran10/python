@@ -1,16 +1,14 @@
-import module11
-import common_funcs
-import packing_classes
+import packing_operation
 
 if __name__ == '__main__':
     option = None
     while option not in {1, 2, 3}:
         option = int(input("Select Option Number [1-Park, 2-Pickup, 3-History]:"))
     
-    packing = packing_classes.Packing()
+    
     if option == 1:
-        packing.pack()
+        packing_operation.ParkingOperation.park()
     elif option == 2:
-        packing.pickup()
+        packing_operation.ParkingOperation.pickup()
     else:
-        packing.history()
+        packing_operation.ParkingOperation.history()
