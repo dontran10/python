@@ -18,6 +18,6 @@ class ParkingOperation:
             
     def history():
         parkingInfo= parking_info.ParkingInfo.inputCarIndentity()
-        parkingInfo.PrintPackingHistory()
-        print("Packing History exported. Please check file!")
+        parkingInfo.ExportPackingHistory()
+        print("Packing History exported. Please check file [" + parkingInfo.PARKING_HISTORY_FOLDER + parkingInfo.car_identity + ".txt]")
        

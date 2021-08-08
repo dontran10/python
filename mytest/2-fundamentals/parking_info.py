@@ -8,6 +8,7 @@ import parking_fee
 class ParkingInfo:
     DATETIME_FORMAT = '%Y-%m-%d %H:%M'
     PARKING_DATA_FOLDER = "./parking-data/parking/" 
+    PARKING_HISTORY_FOLDER = "./parking-data/parking-history/" 
     
     ##
     car_identity = ""
@@ -149,13 +150,52 @@ class ParkingInfo:
         with open(fullname, "w") as file:
             json.dump(self.parkInfos, file)
 
-      
-       
+    def inputCarIndentity() :        
+        car_identity = str(input('Car Identity (ex: 01A-12345):'))
+        car_identity = car_identity.strip()
 
-
-      
-
+        if not ParkingInfo.isValidCarIdentity(car_identity):
+            raise NameError('Invalid Car Identity')
         
-        
+        fullname = ParkingInfo.PARKING_DATA_FOLDER + car_identity + ".json"
+        if not os.path.isfile(fullname):
+            raise NameError("This car ever parked yet")
+
+        parkInfos = None
+        with open(fullname , "r") as file:
+            parkInfos = json.load(file)
+            
+        parkingInfo = ParkingInfo(car_identity, parkInfos, None)
+        return parkingInfo  
        
-# guru99.com/reading-and-writing-files-in-python.html
+    def ExportPackingHistory(self):
+        fullname = ParkingInfo.PARKING_HISTORY_FOLDER + self.car_identity + ".txt"
+        f= open(fullname,"w")
+
+        availbleCredit = self.parkInfos["available-credit"]
+        totalPayment  = availbleCredit
+        for pk in range(len(self.parkInfos["parking-infos"])):
+            totalPayment = totalPayment + self.parkInfos["parking-infos"][pk]["payment-amount"]
+    
+        f.write("Total payment: "+ "{:.2f}".format(totalPayment)+"\n")
+        f.write("Available credits: "+ "{:.2f}".format(availbleCredit)+"\n")
+        f.write("Parked Dates:" +"\n")
+
+        for pk in range(len(self.parkInfos["parking-infos"])):
+            strParkTime = self.parkInfos["parking-infos"][pk]["parking-time"]
+            strPickTime = self.parkInfos["parking-infos"][pk]["pickup-time"]
+            parkTime = datetime.datetime.strptime(strParkTime, ParkingInfo.DATETIME_FORMAT)
+            pickTime = parkTime
+            if len(strPickTime) > 0:
+                pickTime = datetime.datetime.strptime(strPickTime, ParkingInfo.DATETIME_FORMAT)
+    
+            totalDurationInMinutes = (pickTime - parkTime).total_seconds() // 60
+            totalDurationInHour = int(totalDurationInMinutes//60)
+            remainMinutes = int(totalDurationInMinutes % 60)
+            strDuration = str(totalDurationInHour) + ":" + str(remainMinutes)
+            if len(strPickTime) == 0:
+                strDuration = "N/A"
+
+            f.write(strParkTime + " - " + strDuration + "\n")
+                    
+        f.close() 
