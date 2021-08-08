@@ -1,20 +1,23 @@
 import parking_info
 
-
 class ParkingOperation:
   
 
     def park():
-        parkingInfo = parking_info.ParkingInfo()
-        #car.inputPackingInfo()
-        parkingInfo.car_identity = "01A-12345"
+        parkingInfo = parking_info.ParkingInfo("", {}, None)
+        parkingInfo.inputPackingInfo()
         parkingInfo.saveParkingInfo()
+        print("Parking Completed. Welcome!")
 
 
     def pickup():
-        parkingInfo = parking_info.ParkingInfo.inputPickUpCar()
-
+        parkingInfo= parking_info.ParkingInfo.inputPickUpCar()
+        parkingInfo.calculateFeeAndSave()
+        print("PickUp Completed. Thank you for payment!")
             
             
     def history():
-        print('history')
+        parkingInfo= parking_info.ParkingInfo.inputCarIndentity()
+        parkingInfo.PrintPackingHistory()
+        print("Packing History exported. Please check file!")
+       

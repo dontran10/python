@@ -1,17 +1,22 @@
 import datetime
-import re
-import string
-import json
-import os
-import enum
+from enum import Enum
 
-class ParkTimeRange(enum) :
-    DAY_LIGHT = 1,
-    BEFORE_MIDNIGHT = 2,
+class ParkTimeRange(Enum) :
+    DAY_LIGHT = 1
+    BEFORE_MIDNIGHT = 2
     AFTER_MIDNIGHT = 3
 
+#
+#Return the next weekday (0: Monday, 1: Tuesday....6: Sunday)
+#
+def getNexWeekday(weekday):
+    weekday = weekday + 1
+    if weekday > 6:
+        weekday = 0
+    return weekday
+
 def getHourRangeWeekday(ptime):
-    hour = ptime.strftime("%H")
+    hour = int(ptime.strftime("%H"))
     weekday = ptime.weekday()
     if (hour >= 8) and (hour < 17):
         return ParkTimeRange.DAY_LIGHT, weekday,hour
@@ -68,11 +73,14 @@ def calculateParkingFee(strParkTime, strPickTime, timeFormat):
     
     
     packDurationInHour = (pickTime - parkTime).total_seconds() / 3600
-    packDurationInDay =  1+ (pickTime - parkTime).total_seconds() // 24
+    packDurationInDay =  int((packDurationInHour // 24) - 1)
    
     fee = 0
     arrivalRange, arrivalWeekday, arrivalHour = getHourRangeWeekday(parkTime)
     pickRange, pickWeekday, pickHour = getHourRangeWeekday(pickTime)
+
+    # First calculate fee for (a part) of arrival day and (a part) of pick day
+    # Arrival day and pick day can be same day or pick day is a day after arrival day 
     if arrivalRange == ParkTimeRange.DAY_LIGHT:
 
         duration1 = 0
@@ -134,5 +142,16 @@ def calculateParkingFee(strParkTime, strPickTime, timeFormat):
             + calculateFeeInRange(duration1, arrivalWeekday,ParkTimeRange.DAY_LIGHT) \
             + calculateFeeInRange(duration2, arrivalWeekday,ParkTimeRange.BEFORE_MIDNIGHT) \
             + calculateFeeInRange(8 - pickHour, pickWeekday,ParkTimeRange.AFTER_MIDNIGHT)
+
+    # Second, add fee to fee of whole day * n (days) (n days between arrival day and pick day)
+    nextWeekDay = getNexWeekday(arrivalWeekday)
+    for d in range(packDurationInDay):
+        fee = fee + calculateFeeInRange(8, nextWeekDay,ParkTimeRange.AFTER_MIDNIGHT) \
+            + calculateFeeInRange(9, nextWeekDay,ParkTimeRange.DAY_LIGHT) \
+            + calculateFeeInRange(7, nextWeekDay,ParkTimeRange.BEFORE_MIDNIGHT) 
+        nextWeekDay = getNexWeekday(nextWeekDay)
+    
+    # Round up with two decimal
+    return round(fee, 2)
 
 

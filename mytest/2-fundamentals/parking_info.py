@@ -3,6 +3,7 @@ import re
 import string
 import json
 import os
+import parking_fee
 
 class ParkingInfo:
     DATETIME_FORMAT = '%Y-%m-%d %H:%M'
@@ -13,8 +14,14 @@ class ParkingInfo:
     arrival_time = ""
     frequency_number = ""
 
-    def __init__(self):
-        pass
+    #
+    parkInfos = []
+    activeParkingInfo = None
+
+    def __init__(self,  car_identity, parkInfos, activeParkingInfo):
+        self.car_identity = car_identity
+        self.parkInfos = parkInfos
+        self.activeParkingInfo = activeParkingInfo
   
     def getCurrentTime():
         return datetime.datetime.now().strftime(ParkingInfo.DATETIME_FORMAT)
@@ -52,13 +59,14 @@ class ParkingInfo:
                 break
             else:
                 print('Invalid datetime (yyy-MM-dd hh:mm), re-enter gain')
+        while True:
         # Car IdentitY
             self.car_identity = str(input('Car Identity (ex: 01A-12345):'))
             if ParkingInfo.isValidCarIdentity(self.car_identity):
                 break
             else:
                 print('Invalid identiy, re-enter gain')
-        
+        while True:
         # Frequency Number
             self.frequency_number = str(input('Frequency Number (ex: 12343):'))
             if ParkingInfo.isValidFrequencyNumber(self.frequency_number):
@@ -93,28 +101,9 @@ class ParkingInfo:
         with open(fullname, "w") as file:
             json.dump(parkInfos, file)
 
-    def findPackingInfo(carIdentity):
-        carIdentity = string.strip(carIdentity)
-        if not ParkingInfo.isValidCarIdentity(carIdentity):
-            raise NameError('Invalid Car Identity')
-        else:
-            found = False
-            fullname = ParkingInfo.PARKING_DATA_FOLDER + carIdentity + ".json"
-            if not os.path.isfile(fullname):
-                raise NameError("This car ever parked yet")
-            else:
-                with open(fullname , "r") as file:
-                    parkInfos = json.load(file)
-                    packing = list(filter(lambda x: (x["pickup-time"] == ""), parkInfos["parking-infos"]))
-                    if len(packing) != 1:
-                        raise NameError("This car already picked up")
-                    else:
-                        return parkInfos
-
-
     def inputPickUpCar() :        
         car_identity = str(input('Car Identity (ex: 01A-12345):'))
-        car_identity = string.strip(car_identity)
+        car_identity = car_identity.strip()
 
         if not ParkingInfo.isValidCarIdentity(car_identity):
             raise NameError('Invalid Car Identity')
@@ -123,15 +112,46 @@ class ParkingInfo:
         if not os.path.isfile(fullname):
             raise NameError("This car ever parked yet")
         
-        activeParkingInfo = None
+        activeParkingInfos = None
         parkInfos = None
         with open(fullname , "r") as file:
             parkInfos = json.load(file)
-            activeParkingInfo = list(filter(lambda x: (x["pickup-time"] == ""), parkInfos["parking-infos"]))
-            if len(activeParkingInfo) != 1:
+            activeParkingInfos = list(filter(lambda x: (x["pickup-time"] == ""), parkInfos["parking-infos"]))
+            if len(activeParkingInfos) != 1:
                 raise NameError("This car already picked up")
         
+        parkingInfo = ParkingInfo(car_identity, parkInfos, activeParkingInfos[0])
+        return parkingInfo
+    
+    def calculateFeeAndSave(self) : 
+        pickTimeStr = ParkingInfo.getCurrentTime()
+        fee = parking_fee.calculateParkingFee(self.activeParkingInfo["parking-time"],
+                                        pickTimeStr, ParkingInfo.DATETIME_FORMAT)
+        payment = 0
+        exceedAmount = 0
+        avaiableCredit = self.parkInfos["available-credit"]
+        print("Fee = " + "{:.2f}".format(fee) + " [Available credit = " +  "{:.2f}".format(avaiableCredit) + "]")
+        while True:
+            payment = float(input("Enter the payment: "))
+            exceedAmount = payment + avaiableCredit - fee
+            if exceedAmount >= 0:
+                break
+            else:
+                print("Not enough payment, enter again")
         
+        # Payment done, update payment for this parking
+        self.activeParkingInfo["pickup-time"] = pickTimeStr
+        self.activeParkingInfo["payment-amount"] = fee
+        self.parkInfos["available-credit"] = exceedAmount
+
+        # Save
+        fullname = ParkingInfo.PARKING_DATA_FOLDER + self.car_identity + ".json"
+        with open(fullname, "w") as file:
+            json.dump(self.parkInfos, file)
+
+      
+       
+
 
       
 
