@@ -1,0 +1,16 @@
+Install a package
+$py -m pip install <packagename>
+
+Instal a package with specific verion
+$python -m pip install <packagename>==<verion>
+
+Update to latest verion
+$python -m pip install --upgrade <packagename>
+
+------------
+Create and Active Virtual Environtment
+Create:
+python -m venv <name>-env
+
+Active:
+$<name>-env\Scripts\activate.bat

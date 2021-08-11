@@ -79,16 +79,32 @@ WSGI_APPLICATION = 'tweeter.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+# *** MySQL
+# DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.mysql',
+#        'NAME': 'django_tweeter',
+#        'USER': 'root',
+#        'PASSWORD': '123456',
+#        'HOST': 'localhost',
+#        'PORT': '3306',
+#    }
+#}
+
+# SQL Server
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'django_tweeter',
-        'USER': 'root',
-        'PASSWORD': '123456',
-        'HOST': 'localhost',
-        'PORT': '3306',
-    }
+    "default": {
+        "ENGINE": "mssql",
+        "NAME": "DJANGO1",
+        "USER": "sa",
+        "PASSWORD": "P@ssword123$$$111",
+        "HOST": "127.0.0.1",
+        "PORT": "1433",
+        "OPTIONS": {"driver": "ODBC Driver 17 for SQL Server", 
+        },
+    },
 }
+
 
 
 # Password validation

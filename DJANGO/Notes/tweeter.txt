@@ -1,0 +1,4 @@
+amind:
+  admin/123
+login
+  dontran/1234!@#$

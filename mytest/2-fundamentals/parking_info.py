@@ -6,6 +6,9 @@ import os
 import parking_fee
 
 class ParkingInfo:
+    """
+    The Class to encapsulate the parking information
+    """
     DATETIME_FORMAT = '%Y-%m-%d %H:%M'
     PARKING_DATA_FOLDER = "./parking-data/parking/" 
     PARKING_HISTORY_FOLDER = "./parking-data/parking-history/" 
@@ -28,6 +31,13 @@ class ParkingInfo:
         return datetime.datetime.now().strftime(ParkingInfo.DATETIME_FORMAT)
 
     def isValidParkTime( strtime):
+        """
+        Verify the time string input is valid with required formation of this app
+        Input
+           strtime: the time text
+        Return
+           True of False
+        """
         isValid = True
         try:
             datetime.datetime.strptime(strtime, ParkingInfo.DATETIME_FORMAT)
@@ -36,10 +46,24 @@ class ParkingInfo:
         return 
         
     def isValidCarIdentity(id):
+        """
+        Verify the car id input is valid with required formation of this app
+        Input
+           id: the car id
+        Return
+           True of False
+        """
         p = re.compile("^[0-9]{2}[A-Z]{1}[-]{1}[0-9]{5}$")
         return p.match(id)
     
     def isValidFrequencyNumber(digits):
+        """
+        Verify the frequency numer input is valid with required formation of this app
+        Input
+           digits: the number
+        Return
+           True of False
+        """
         digits = digits.strip()
         if digits.isdigit() and (len(digits) == 5):
             origin = digits[: 4]
@@ -50,6 +74,11 @@ class ParkingInfo:
             return False
 
     def inputPackingInfo(self) :
+        """
+        Capture user parking input and validate it
+        Input
+           This object
+        """
          # Arrival Time
         while True:
             self.arrival_time = str(input('Arrival Time (enter to get current time):'))
@@ -76,6 +105,12 @@ class ParkingInfo:
                 print('Invalid frequencey number, re-enter gain')
     
     def saveParkingInfo(self):
+        """
+        Save the parking informatin to json file to be used later at pickup or history
+        One car id is one json file
+        Input
+           This object
+        """
         fullname = ParkingInfo.PARKING_DATA_FOLDER + self.car_identity + ".json"
 
         # First time parking for this car, init data-json file for this car
@@ -102,7 +137,12 @@ class ParkingInfo:
         with open(fullname, "w") as file:
             json.dump(parkInfos, file)
 
-    def inputPickUpCar() :        
+    def inputPickUpCar() :
+        """
+        Capture user picking input and validate it
+        Input
+           This object
+        """        
         car_identity = str(input('Car Identity (ex: 01A-12345):'))
         car_identity = car_identity.strip()
 
@@ -125,6 +165,12 @@ class ParkingInfo:
         return parkingInfo
     
     def calculateFeeAndSave(self) : 
+        """
+        Calculate parking free for the car provided and save to json file for use later
+        One car id is one json file
+        Input
+           This object
+        """
         pickTimeStr = ParkingInfo.getCurrentTime()
         fee = parking_fee.calculateParkingFee(self.activeParkingInfo["parking-time"],
                                         pickTimeStr, ParkingInfo.DATETIME_FORMAT)
@@ -150,7 +196,10 @@ class ParkingInfo:
         with open(fullname, "w") as file:
             json.dump(self.parkInfos, file)
 
-    def inputCarIndentity() :        
+    def inputCarIndentity() : 
+        """
+        Capture car id and validate it
+        """       
         car_identity = str(input('Car Identity (ex: 01A-12345):'))
         car_identity = car_identity.strip()
 
@@ -169,6 +218,9 @@ class ParkingInfo:
         return parkingInfo  
        
     def ExportPackingHistory(self):
+        """
+        Export parking history of this car to txt file based on the data in json file
+        """ 
         fullname = ParkingInfo.PARKING_HISTORY_FOLDER + self.car_identity + ".txt"
         f= open(fullname,"w")
 

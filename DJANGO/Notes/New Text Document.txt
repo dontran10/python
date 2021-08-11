@@ -1,0 +1,12 @@
+
+---
+1. From a foder X, start a site:
+$ django-admin startproject <sitename>
+
+2. Start server: move to X/<sitename> folder then
+$ py manage.py runserver
+
+3. Stop
+Ctrl + C
+-------
+https://docs.microsoft.com/en-us/samples/azure-samples/mssql-django-samples/mssql-django-samples/

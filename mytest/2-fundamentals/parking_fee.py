@@ -6,16 +6,27 @@ class ParkTimeRange(Enum) :
     BEFORE_MIDNIGHT = 2
     AFTER_MIDNIGHT = 3
 
-#
-#Return the next weekday (0: Monday, 1: Tuesday....6: Sunday)
-#
 def getNexWeekday(weekday):
+    """
+    Calculate the next weekday
+    Input
+       weekday: the week day  (0: Monday, 1: Tuesday....6: Sunday)
+    Return
+       The next week day
+    """
     weekday = weekday + 1
     if weekday > 6:
         weekday = 0
     return weekday
 
 def getHourRangeWeekday(ptime):
+    """
+    For the datetime given, check which time range of the day 
+    Input
+       ptime: the datetime 
+    Return
+       The time range in day, one of three values (DayLight, Before Midnight or After Midnight)
+    """
     hour = int(ptime.strftime("%H"))
     weekday = ptime.weekday()
     if (hour >= 8) and (hour < 17):
@@ -26,6 +37,15 @@ def getHourRangeWeekday(ptime):
         return ParkTimeRange.AFTER_MIDNIGHT, weekday,hour
 
 def calculateFeeInRange(parkingHours, weekday, range):
+    """
+    Calculate parking fee for period of time on a given weekday, within the time range given
+    Input
+       parkingHours: the time duration in hour of parking
+       weekday: the day of week (0: Monday, 1: Tuesday...)
+       range: one of three time ranges in day (DayLight, Before Midnight or After Midnight)
+    Return
+       The parking fee
+    """
     maxHour = 0
     pricePerHour = 0
     discount = 0
@@ -64,6 +84,15 @@ def calculateFeeInRange(parkingHours, weekday, range):
     return fee* (100 - discount)/100
 
 def calculateParkingFee(strParkTime, strPickTime, timeFormat):
+    """
+    Calculate parking fee for the parking duration given
+    Input
+       strParkTime: the arrival time string in the format given
+       strPickTime: the pickup time string in the format given
+       timeFormat: time format (YYYY-MM-dd hh:mm)
+    Return
+       The parking fee
+    """
     parkTime = datetime.datetime.strptime(strParkTime, timeFormat)
     pickTime = datetime.datetime.strptime(strPickTime, timeFormat)
     

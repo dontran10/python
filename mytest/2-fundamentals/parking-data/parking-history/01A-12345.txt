@@ -1,5 +1,5 @@
-Total payment: 222.20
-Available credits: 204.20
+Total payment: 422.20
+Available credits: 75.30
 Parked Dates:
 2021-08-08 10:29 - 0:3
-2021-08-08 10:34 - N/A
+2021-08-08 10:34 - 71:12
