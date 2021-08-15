@@ -9,7 +9,7 @@
     - Notes: in DATABASES setting, use the account with permission (CRUD), then manage.py migrate can works
 
 - If use SQL Server as backend DB:
-    - $python -m pip install mysql-django
+    - $python -m pip install mssql-django
     - Select DATABASES in settings.py (comment out the on for My SQL )
     - Notes: in DATABASES setting, use the account with permission (CRUD), then manage.py migrate can works
 
