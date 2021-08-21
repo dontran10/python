@@ -40,7 +40,7 @@ pyinstaller-hooks-contrib==2020.9
 pyparsing==2.4.6
 pytoml==0.1.21
 pytz==2020.1
-requests==2.22.0
+requests==2.23.0
 retrying==1.3.3
 six==1.13.0
 sqlparse==0.3.1
@@ -52,5 +52,6 @@ whichcraft==0.6.1
 whitenoise==5.2.0
 zope.event==4.5.0
 zope.interface==5.1.2
+django-tailwind==2.0.1
 mssql-django
 djangorestframework
