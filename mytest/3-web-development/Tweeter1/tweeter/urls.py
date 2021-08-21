@@ -22,10 +22,7 @@ from users import views as users_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('login/', auth_views.LoginView
-         .as_view(template_name='users/login.html'), name='login'),  # class based views (
-    # without templates
-    # tho)
+    path('login/', auth_views.LoginView.as_view(template_name='users/login.html'), name='login'),
     
     path('logout/', users_views.logout_view, name='logout'),
     path('password-reset/', auth_views.PasswordResetView.as_view(template_name='users/password_reset.html'),
