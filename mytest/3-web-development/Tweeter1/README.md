@@ -7,7 +7,7 @@ Demo Image:
 
 ## Setup
 
-1. Unzip the folder Tweeter.
+1. Unzip the folder Tweeter1.zip.
 
 2. Move to the base directory: ```cd Tweeter```
 
