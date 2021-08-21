@@ -24,7 +24,7 @@ body {
 .search-container {
     width: 300px;
     height: 45px;
-    background-color: #253341;
+    background-color: #446280;
     border-radius: 30px;
     display: flex;
 }
@@ -192,10 +192,21 @@ body {
 }
 
 .search-result-profile{
-    background-color: #253341;
+    background-color: #446280;
     border-radius: 20px;
     padding: 15px;
     margin: 9px;
     display: flex;
     align-items: center;
+}
+
+.text-4xl {
+	font-size: 2.25rem;
+	line-height: 2.5rem;
+    font-style: italic;
+}
+
+.text-white {
+	--tw-text-opacity: 1;
+	color: rgba(255, 255, 255, var(--tw-text-opacity));
 }
