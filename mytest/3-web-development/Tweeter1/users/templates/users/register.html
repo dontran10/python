@@ -1,23 +1,56 @@
-{% extends "blog/base.html" %}
-{% load crispy_forms_tags %}
-{% block content %}
-<div class="container">
-    <form method="POST" class="col-12 col-md-6 pl-3 pr-3 pl-md-0 pr-md-0">
-        {% csrf_token %}
-        <fieldset class="form-group">
-            <legend class="mb-3 white-important">
-                Register a new account
-            </legend>
-            {{ form | crispy }}
-        </fieldset>
-        <div class="form-group">
-            <button class="btn btn-outline-primary" type="submit">Sign Up</button>
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+    <title>Django - Tweeter</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		{% tailwind_css %}
+	</head>
+
+	<body>
+
+		<div class="min-h-screen bg-gray-100 flex flex-col justify-center sm:py-12">
+            <div class="relative py-3 sm:max-w-xl sm:mx-auto">
+            <div class="absolute inset-0 bg-gradient-to-r 
+                from-yellow-400 to-light-yellow-500 shadow-lg transform -skew-y-6 sm:skew-y-0 
+                sm:-rotate-6 sm:rounded-3xl"></div>
+            <div class="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
+                <div class="max-w-xl mx-auto">
+                    <div>
+                        <p class="text-5xl italic text-yellow-500 text-center">Registration</p>
+                    </div>
+                    <div class="divide-y divide-gray-200">
+                        <div class="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
+                            {% if form.errors %}
+                                {% for field in form %}
+                                        {{ field.errors }}
+                                {% endfor %}
+                            {% endif %}
+                            <form class="tw-account-form" method="post" action="{% url 'register-users' %}">
+                                {% csrf_token %}
+                                <div class="grid grid-cols-1 gap-6">
+                                    {% for field in form %}
+                                        <label class="block">
+                                            <span class="text-gray-500" for="{{field.id_for_label}}">{{ field.label }}</span>
+                                            {{ field }}
+                                        </label>
+                                    {% endfor %}
+                                </div>
+                                <button type="submit" class="btn btn-yellow w-full mt-6">Register</button>
+                            </form>
+                        </div>
+                        <div class="p-6 text-base leading-6 font-bold sm:text-lg sm:leading-7">
+                            <p>Already has account?</p>
+                            <p>
+                                <a href="{% url 'login' %}" class="text-yellow-600 hover:text-yellow-700">Login here &rarr;</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </form>
-    <div class="pt-3">
-        <small class="text-muted">
-            Already Have An Account? <a class="ml-2" href="{% url 'login' %}">Sign In</a>
-        </small>
-    </div>
-</div>
-{% endblock content %}
+        
+	</body>
+</html>
