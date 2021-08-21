@@ -4,7 +4,7 @@
 
 
 body {
-background: #15202b;
+background: #4b6c8d;
 color: var(--muted-color);
 margin-top: 5rem;
 }
@@ -18,7 +18,7 @@ margin: 0;
 }
 
 .bg-steel {
-background-color: #15202b;
+background-color: #1da1f2;
 }
 
 .site-header .navbar-nav .nav-link {
@@ -218,13 +218,13 @@ border-radius: 25px;
 }
 
 .who-to-follow{
-border-top: 1px solid grey;
+border-top: 1px solid #36495c;
 padding: 3px;
 margin: 3px;
 }
 
 .profile-section{
-background-color: #2d3741;
+background-color: #36495c;
 padding: 5px;
 border-radius: 25px;
 }
