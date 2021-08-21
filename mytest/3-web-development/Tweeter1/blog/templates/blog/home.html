@@ -240,14 +240,14 @@
                 {% endif %}
             </div>
         </div>
-        <div class="col-12 col-md-3 dont-move">
-            <form action="{% url 'search' %}" method="post">{% csrf_token %}
+            <div class="col-12 col-md-3 dont-move">
+               <form action="{% url 'search' %}" method="post">{% csrf_token %}
                 <div class="search-container">
                     <div class="search">
-                    <input required name="search" type="text" id="zip-code-input" placeholder="Search Twitter">
+                    <input required name="search" type="text" id="zip-code-input" placeholder="Search">
                     <button type="submit" style="border:0; background: transparent;"><i class="fa fa-search"></i> </button> </a>
                 </form>
-              </div>
+            </div>
             </div>
             <h3 class="white-important mb-3 mt-4"> Trends </h3>
 
