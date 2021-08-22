@@ -1,0 +1,2 @@
+dependency-injector==4.35.2
+six==1.16.0
